@@ -9,7 +9,8 @@ from datetime import datetime
 #ffmpeg -i alac.m4a -vn -acodec libfaac -aq 400 aac.m4a
 ##############################################################################################
 def convert(root, fname, curdir):
-	CONVERT_CMD = 'ffmpeg "%s" -i "%s" -acodec libmp3lame -qscale:a 1'
+
+	
 	if fname[0] == '.':
 		return
 
@@ -30,7 +31,21 @@ def convert(root, fname, curdir):
 		print 'skip'
 		return
 
-	cmd = CONVERT_CMD % (newname, name)
+	CONVERT_CMD = 'command not found';
+
+	if format == "mp3":
+		CONVERT_CMD = 'ffmpeg "%s" -i "%s" -acodec libmp3lame -qscale:a 1';
+		cmd = CONVERT_CMD % (newname, name)
+	elif format == "aac":
+		CONVERT_CMD = 'afconvert  -f m4af -d aac -b 192000 "%s" -o "%s"';
+		cmd = CONVERT_CMD % (name, newname)
+	elif format == "flac":
+		CONVERT_CMD = 'afconvert  -f flac -d flac "%s" -o "%s"';
+		cmd = CONVERT_CMD % (name, newname)
+#https://apple.stackexchange.com/questions/365616/what-are-the-command-line-options-for-afconvert18
+#ffmpeg -i alac.m4a -vn -acodec libfaac -aq 400 aac.m4a
+#ffmpeg out.mp3 -i in.m4a -acodec libmp3lame -qscale:a 1
+
 	print cmd
 	os.system(cmd)
 	if os.path.exists(name):
